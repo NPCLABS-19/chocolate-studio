@@ -30,3 +30,5 @@ The main branch contains editable source; gh-pages contains the Vite production 
 Optional contour-extraction tooling: `pip install -r research/requirements.txt`, then `python research/trace_sources.py`.
 
 Original moodboard and earlier chocolate concept PDFs are available in the library’s Reference tab (`library.html#reference`), with open and download links.
+
+Starting patterns now presents all eight source-derived key variations directly in the editor, led by Scroll panel (T01). Each tile loads broad relief onto the current bar while preserving packaging layers and dimensions, with Undo support. Next key variation cycles these eight designs. The original Doorway, Botanical, Sun and Blank options remain under Basic shapes. Fresh sessions begin with Scroll panel; saved work is preserved.
