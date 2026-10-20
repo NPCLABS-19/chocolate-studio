@@ -9,3 +9,5 @@ Trace previews have a 3:6 frame and retain source proportions inside it. The fra
 Keep T01–T08 raw source contours distinct from their broad relief SVGs and editable 3:6 projects. Preserve A01–A10 as Earlier interpretations (4:6), not as source traces. The collection includes 23 captured Pinterest sources, source comparisons, study material and a complete ZIP. Trace renders and archived renders must remain associated with their own projects.
 
 Evidence: `src/library.css`, `src/library-page.js`, `src/library.js`, `src/traces.js`, `research/azura-design-study.md`; `.impeccable/review/library-desktop.png`, `library-mobile.png`.
+
+The Reference tab provides the original Familiar Thresholds moodboard and Courtyard Chocolate concept PDFs. Each plain ruled row has Open PDF and Download links. The hash `#reference` opens this tab directly; rows wrap at 700px.

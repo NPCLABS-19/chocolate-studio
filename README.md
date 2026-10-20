@@ -28,3 +28,5 @@ Live site: https://npclabs-19.github.io/chocolate-studio/
 The main branch contains editable source; gh-pages contains the Vite production build. Run `npm ci`, `npm test` and `npm run build` before publishing `dist/` to gh-pages. Relative asset URLs support the GitHub Pages project path. Browser uploads and projects stay on the device.
 
 Optional contour-extraction tooling: `pip install -r research/requirements.txt`, then `python research/trace_sources.py`.
+
+Original moodboard and earlier chocolate concept PDFs are available in the library’s Reference tab (`library.html#reference`), with open and download links.
