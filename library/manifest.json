@@ -1,0 +1,174 @@
+[
+  {
+    "id": "A01",
+    "name": "Paired scroll",
+    "sources": [
+      "P01",
+      "P07"
+    ],
+    "family": "C-scroll",
+    "description": "Two open hourglass curves, held by a quiet outer frame. Small hanging ornaments and parallel center bars are removed.",
+    "principle": "A straight perimeter makes the large curved voids legible. The opposing curls slow the eye at the top and bottom.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A01-relief-4x6.svg",
+    "project": "projects/A01.chocolate.json"
+  },
+  {
+    "id": "A02",
+    "name": "Lyre",
+    "sources": [
+      "P02",
+      "P06"
+    ],
+    "family": "Lyre / heart",
+    "description": "A single elongated lyre with a linked pair of heart-shaped voids. The original mesh is removed and the scroll tips are opened.",
+    "principle": "The narrow waist makes the top and foot feel generous. One continuous line carries the whole height.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A02-relief-4x6.svg",
+    "project": "projects/A02.chocolate.json"
+  },
+  {
+    "id": "A03",
+    "name": "Heart trellis",
+    "sources": [
+      "P15",
+      "P16"
+    ],
+    "family": "Crossing scroll",
+    "description": "The complete four-lobed panel, with a lozenge crossing at its center. Secondary interior curls are reduced to four generous turns.",
+    "principle": "The central diamond is made by the crossing curves themselves. Its tension offsets the soft heart-shaped ends.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A03-relief-4x6.svg",
+    "project": "projects/A03.chocolate.json"
+  },
+  {
+    "id": "A04",
+    "name": "Four-point rhythm",
+    "sources": [
+      "P12",
+      "P11"
+    ],
+    "family": "Ogee / star",
+    "description": "Two columns of large curved four-point forms. Rectangular grid rails and the photographic wire mesh are omitted.",
+    "principle": "The star is a shaped void between four concave arcs. Repetition works because each interval is identical.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A04-relief-4x6.svg",
+    "project": "projects/A04.chocolate.json"
+  },
+  {
+    "id": "A05",
+    "name": "Oval chain",
+    "sources": [
+      "P13"
+    ],
+    "family": "Oval / diamond",
+    "description": "The Penang reference reduced to two elongated chains and four broad diamond anchors. Small intersections are enlarged.",
+    "principle": "An oval reads as both a loop and the gap between two adjacent curves. Solid diamonds punctuate that soft rhythm.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A05-relief-4x6.svg",
+    "project": "projects/A05.chocolate.json"
+  },
+  {
+    "id": "A06",
+    "name": "Twin hearts",
+    "sources": [
+      "P18",
+      "P14"
+    ],
+    "family": "C-scroll",
+    "description": "The whole paired-door rhythm becomes a single, balanced field. Large heart loops meet at one center; trim panels and knobs are omitted.",
+    "principle": "Diagonal movement links the corners to the center. The same curve turns outward at the shoulders and inward at the waist.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A06-relief-4x6.svg",
+    "project": "projects/A06.chocolate.json"
+  },
+  {
+    "id": "A07",
+    "name": "Arched portal",
+    "sources": [
+      "P17",
+      "P10",
+      "P06"
+    ],
+    "family": "Arch",
+    "description": "A complete arched doorway contained on the 4:6 bar. The ornamental field has one large pair of curls above and below an open middle.",
+    "principle": "A calm central interval prevents the arch and its curls from competing. The top silhouette does the architectural work.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A07-relief-4x6.svg",
+    "project": "projects/A07.chocolate.json"
+  },
+  {
+    "id": "A08",
+    "name": "Crowned gate",
+    "sources": [
+      "P22",
+      "P20",
+      "P08"
+    ],
+    "family": "Crest / fan",
+    "description": "The scalloped crown and long diagonals define the entire gate. Rows of tiny rings, spearheads and tight curls are replaced by open sweeps.",
+    "principle": "The crown concentrates activity at the top; long quiet uprights give it somewhere to rest.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A08-relief-4x6.svg",
+    "project": "projects/A08.chocolate.json"
+  },
+  {
+    "id": "A09",
+    "name": "Scroll vine",
+    "sources": [
+      "P03",
+      "P04",
+      "P09"
+    ],
+    "family": "S-scroll / vine",
+    "description": "A full-height S-stem and two large side scrolls. Catalogue micro-leaves are replaced by a pair of broad leaf silhouettes.",
+    "principle": "Large, medium and small turns are hierarchical. The stem changes curvature gradually instead of repeating identical tight spirals.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A09-relief-4x6.svg",
+    "project": "projects/A09.chocolate.json"
+  },
+  {
+    "id": "A10",
+    "name": "Heart palmette",
+    "sources": [
+      "P19",
+      "P23"
+    ],
+    "family": "Heart / botanical",
+    "description": "A double-height central heart with broad palm-like shoulders. The vertical frame is complete and decorative joints become solid intersections.",
+    "principle": "A heart is formed by two mirrored return curves. Letting the curves branch from the same stem makes the ornament feel grown rather than applied.",
+    "width": 60,
+    "height": 90,
+    "relief": 0.65,
+    "bevel": 0.35,
+    "svg": "svg/A10-relief-4x6.svg",
+    "project": "projects/A10.chocolate.json"
+  }
+]

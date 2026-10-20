@@ -1,0 +1,141 @@
+{
+  "format": "19-chocolate-studio",
+  "version": 1,
+  "name": "A06 Twin hearts",
+  "bar": {
+    "width": 60,
+    "height": 90,
+    "thickness": 5,
+    "relief": 0.65,
+    "bevel": 0.35
+  },
+  "objects": [
+    {
+      "id": "8db7e9a1-0869-4910-a56d-4aaae8edea19",
+      "name": "Continuous outer frame",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": false,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"54\" height=\"84\" rx=\"1.5\"/></g>"
+    },
+    {
+      "id": "a38ec3be-f7b3-4b26-b7fa-585a182c5858",
+      "name": "Upper heart pair",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": false,
+      "mirrorY": true,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 30 45 C 19 32 7 26 8 16 C 9 5 24 7 24 16 C 24 23 15 24 15 18 M 30 45 C 41 32 53 26 52 16 C 51 5 36 7 36 16 C 36 23 45 24 45 18\"/></g>"
+    },
+    {
+      "id": "8ec2fb80-22d2-418c-8ec9-9c284bc21b48",
+      "name": "Side return curls",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": true,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 30 45 C 15 37 6 38 7 45 C 8 50 15 50 14 45\"/></g>"
+    }
+  ],
+  "layers": [
+    {
+      "id": "ec549aa7-c2c5-4d3a-b016-bf293ea03d20",
+      "type": "chocolate",
+      "visible": true,
+      "color": "#45271b",
+      "coverage": 100,
+      "offset": 0,
+      "roughness": 0.36,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Chocolate"
+    },
+    {
+      "id": "7f817116-cec8-483f-b785-167089c94a08",
+      "type": "foil",
+      "visible": false,
+      "color": "#b8b9b6",
+      "coverage": 74,
+      "offset": 0,
+      "roughness": 0.29,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Foil"
+    },
+    {
+      "id": "819f4170-e49f-4e89-a722-698633cebb19",
+      "type": "sleeve",
+      "visible": false,
+      "color": "#ded9cb",
+      "coverage": 59,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Inner sleeve"
+    },
+    {
+      "id": "83d38853-c7de-4cbf-be8e-65e9fc6991d5",
+      "type": "carton",
+      "visible": false,
+      "color": "#707859",
+      "coverage": 47,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Outer packaging"
+    }
+  ],
+  "scene": {
+    "background": "#e6e6e2",
+    "explode": 0,
+    "light": 1,
+    "shadow": true
+  },
+  "symmetry": {
+    "x": true,
+    "y": false
+  },
+  "libraryId": "A06"
+}
