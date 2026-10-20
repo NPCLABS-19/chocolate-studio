@@ -1,0 +1,141 @@
+{
+  "format": "19-chocolate-studio",
+  "version": 1,
+  "name": "A05 Oval chain",
+  "bar": {
+    "width": 60,
+    "height": 90,
+    "thickness": 5,
+    "relief": 0.65,
+    "bevel": 0.35
+  },
+  "objects": [
+    {
+      "id": "19fc4f22-53c3-4c32-bf18-bdb6946136cd",
+      "name": "Continuous outer frame",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": false,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"54\" height=\"84\" rx=\"1.5\"/></g>"
+    },
+    {
+      "id": "b057a64e-bced-4334-9ea8-301c94538391",
+      "name": "Paired oval chains",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": true,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 17 8 C 3 16 3 27 17 35 C 31 43 31 54 17 62 C 3 70 3 78 17 82 M 17 8 C 31 16 31 27 17 35 C 3 43 3 54 17 62 C 31 70 31 78 17 82\"/></g>"
+    },
+    {
+      "id": "ef38bf46-ed38-4b0d-a597-49004de0b8e5",
+      "name": "Broad diamond anchors",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": true,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"currentColor\" stroke=\"none\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 17 29 L 21 35 L 17 41 L 13 35 Z M 17 56 L 21 62 L 17 68 L 13 62 Z\"/></g>"
+    }
+  ],
+  "layers": [
+    {
+      "id": "d515b08d-9488-4c81-b105-7dec3ce8cf2b",
+      "type": "chocolate",
+      "visible": true,
+      "color": "#45271b",
+      "coverage": 100,
+      "offset": 0,
+      "roughness": 0.36,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Chocolate"
+    },
+    {
+      "id": "2905eeb6-4277-49a7-81ad-4dfda62b2687",
+      "type": "foil",
+      "visible": false,
+      "color": "#b8b9b6",
+      "coverage": 74,
+      "offset": 0,
+      "roughness": 0.29,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Foil"
+    },
+    {
+      "id": "e95e4fd4-87e8-4f44-9391-10587dd36de2",
+      "type": "sleeve",
+      "visible": false,
+      "color": "#ded9cb",
+      "coverage": 59,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Inner sleeve"
+    },
+    {
+      "id": "4abbc6f5-4259-4c37-93ba-f3ffb1dbaac9",
+      "type": "carton",
+      "visible": false,
+      "color": "#707859",
+      "coverage": 47,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Outer packaging"
+    }
+  ],
+  "scene": {
+    "background": "#e6e6e2",
+    "explode": 0,
+    "light": 1,
+    "shadow": true
+  },
+  "symmetry": {
+    "x": true,
+    "y": false
+  },
+  "libraryId": "A05"
+}

@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {initialProject,validateProject,svgDocument,preset,mirrors,newLayer} from '../src/pattern.js';
+import {traceProject} from '../src/traces.js';
+import {readFileSync} from 'node:fs';
+test('project round-trip preserves hidden packaging and linked mirrored forms',()=>{const p=initialProject();const next=validateProject(JSON.parse(JSON.stringify(p)));assert.deepEqual(next,p);assert.equal(next.layers.length,4);assert.equal(next.layers.filter(l=>l.visible).length,1);assert.ok(next.objects.some(o=>o.mirrorX));});
+test('SVG exports a continuous face in mm, mirrors as geometry, and hides removed forms',()=>{const p=initialProject();p.objects[0].visible=false;const svg=svgDocument(p);assert.match(svg,/width="60mm" height="120mm"/);assert.match(svg,/translate\(60 0\) scale\(-1 1\)/);assert.ok(!svg.includes(p.objects[0].name));assert.match(svg,/Relief 0.65 mm/);});
+test('mirror combinations preserve original and cover both axes',()=>{assert.equal(mirrors({mirrorX:true,mirrorY:true},50,100).length,4);assert.equal(mirrors({},50,100).length,1);});
+test('unsafe dimensions and unsupported embedded artwork are rejected',()=>{const p=initialProject();p.bar.width=100000;assert.throws(()=>validateProject(p));const q=initialProject();q.layers[1].artwork='https://example.com/asset.png';assert.throws(()=>validateProject(q));});
+test('empty design and removal of all packaging layers remain valid projects',()=>{const p=initialProject();p.objects=preset('blank');p.layers=[];assert.equal(validateProject(p).objects.length,0);assert.equal(newLayer('foil').type,'foil');});
+test('new bars use the chosen 3:6 ratio and every wrapper is full cover',()=>{const p=initialProject();assert.equal(p.bar.width/p.bar.height,.5);assert.equal(p.bar.thickness,7.5);for(const type of ['foil','sleeve','carton']){const l=newLayer(type);assert.equal(l.coverage,100);assert.equal(l.offset,0);}});
+test('source traces keep raw contours separate from broadened relief projects',()=>{const entries=JSON.parse(readFileSync(new URL('../public/library/traces/manifest.json',import.meta.url),'utf8'));assert.equal(entries.length,8);for(const entry of entries){const raw=traceProject(entry,true),broad=traceProject(entry);assert.equal(raw.bar.width/raw.bar.height,.5);assert.notEqual(raw.objects[0].svg,broad.objects[0].svg);assert.match(raw.objects[0].svg,/fill-rule="evenodd"/);validateProject(raw);validateProject(broad);}});

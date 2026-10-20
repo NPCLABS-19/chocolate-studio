@@ -1,0 +1,141 @@
+{
+  "format": "19-chocolate-studio",
+  "version": 1,
+  "name": "A02 Lyre",
+  "bar": {
+    "width": 60,
+    "height": 90,
+    "thickness": 5,
+    "relief": 0.65,
+    "bevel": 0.35
+  },
+  "objects": [
+    {
+      "id": "e001c0c1-ecd7-4336-876a-a8637ea20cb7",
+      "name": "Continuous outer frame",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": false,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"54\" height=\"84\" rx=\"1.5\"/></g>"
+    },
+    {
+      "id": "b04748bf-314b-4602-8223-18c18f2ef202",
+      "name": "Lyre outline",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": true,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 14 15 C 9 15 9 8 15 8 C 24 8 23 17 20 26 C 16 36 9 39 12 46 C 14 52 23 51 27 45 M 20 26 C 25 19 31 25 26 28 C 23 30 21 26 24 25 M 12 46 C 12 56 23 66 20 79 C 18 87 8 83 11 78 C 13 75 17 78 15 80\"/></g>"
+    },
+    {
+      "id": "640c33e1-9069-411b-afb4-81e3fcf39630",
+      "name": "Heart bridge",
+      "type": "svg",
+      "x": 30,
+      "y": 45,
+      "w": 60,
+      "h": 90,
+      "rotation": 0,
+      "scale": 1,
+      "stroke": 2,
+      "filled": true,
+      "visible": true,
+      "mirrorX": false,
+      "mirrorY": false,
+      "viewBox": "0 0 60 90",
+      "svg": "<g fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 30 42 C 25 35 19 35 20 31 C 22 26 28 28 30 32 C 32 28 38 26 40 31 C 41 35 35 35 30 42 M 30 49 C 25 56 19 56 20 60 C 22 65 28 63 30 59 C 32 63 38 65 40 60 C 41 56 35 56 30 49\"/></g>"
+    }
+  ],
+  "layers": [
+    {
+      "id": "7cd38e5f-5d5b-4e35-926e-915ec0bd751f",
+      "type": "chocolate",
+      "visible": true,
+      "color": "#45271b",
+      "coverage": 100,
+      "offset": 0,
+      "roughness": 0.36,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Chocolate"
+    },
+    {
+      "id": "f211406b-466f-473f-b336-6ef2e7378238",
+      "type": "foil",
+      "visible": false,
+      "color": "#b8b9b6",
+      "coverage": 74,
+      "offset": 0,
+      "roughness": 0.29,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Foil"
+    },
+    {
+      "id": "84d57a64-5b09-47a3-94e3-c44dc06dc635",
+      "type": "sleeve",
+      "visible": false,
+      "color": "#ded9cb",
+      "coverage": 59,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Inner sleeve"
+    },
+    {
+      "id": "85500d70-9b52-460a-bcbe-8cdc60fc30f6",
+      "type": "carton",
+      "visible": false,
+      "color": "#707859",
+      "coverage": 47,
+      "offset": 0,
+      "roughness": 0.65,
+      "artwork": null,
+      "artScale": 1,
+      "artX": 0,
+      "artY": 0,
+      "artRotation": 0,
+      "name": "Outer packaging"
+    }
+  ],
+  "scene": {
+    "background": "#e6e6e2",
+    "explode": 0,
+    "light": 1,
+    "shadow": true
+  },
+  "symmetry": {
+    "x": true,
+    "y": false
+  },
+  "libraryId": "A02"
+}
