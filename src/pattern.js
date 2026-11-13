@@ -4,6 +4,29 @@ export const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 export const clamp = (x,a,b) => Math.min(b,Math.max(a,Number(x)));
 const n = x => Math.round(x*1000)/1000;
 
+export const BAR_FORMATS = Object.freeze({
+  mfs749:Object.freeze({width:85,height:147,thickness:10.3}),
+  square:Object.freeze({width:85,height:85,thickness:10.3})
+});
+
+export function applyBarFormat(project,format) {
+  const next=BAR_FORMATS[format];if(!next)throw Error('Unknown bar format.');
+  const {width:w,height:h}=project.bar;
+  const currentFormat=Object.values(BAR_FORMATS).some(size=>size.width===w&&size.height===h);
+  // The two formats share a width. Inverse height scaling makes repeated toggles reversible.
+  const scale=currentFormat?next.height/h:Math.min(next.width/w,next.height/h);
+  for(const o of project.objects){o.x=next.width/2+(o.x-w/2)*scale;o.y=next.height/2+(o.y-h/2)*scale;o.scale*=scale;}
+  Object.assign(project.bar,next);project.barFormatVersion=1;return project;
+}
+
+// Upgrade only the old built-in dimensions; custom and imported sizes stay editable.
+export function migrateBarFormat(project) {
+  if(project.barFormatVersion===1)return false;
+  project.barFormatVersion=1;
+  if(project.bar.width===60&&[120,140].includes(project.bar.height)&&project.bar.thickness===7.5){applyBarFormat(project,'mfs749');return true;}
+  return false;
+}
+
 export function newLayer(type) {
   const common = {id:uid(),type,visible:true,color:'#e8e3d6',coverage:100,offset:0,roughness:0.65,artwork:null,artScale:1,artX:0,artY:0,artRotation:0};
   return {...common,...({chocolate:{name:'Chocolate',color:'#49291c',roughness:0.36},foil:{name:'Foil',color:'#b8b9b6',roughness:0.29},sleeve:{name:'Inner sleeve',color:'#ded9cb'},carton:{name:'Outer packaging',color:'#707859'}}[type])};
@@ -65,7 +88,7 @@ export function preset(name='door',w=49.8,h=99,variant=0) {
   }
   return a;
 }
-export function initialProject(){return {format:'19-chocolate-studio',version:1,name:'Omani doorway',bar:{width:60,height:120,thickness:7.5,relief:0.65,bevel:0.35},objects:preset('door',60,120),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:'#e6e6e2',explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
+export function initialProject(){return {format:'19-chocolate-studio',version:1,barFormatVersion:1,name:'Omani doorway',bar:{...BAR_FORMATS.mfs749,relief:0.65,bevel:0.35},objects:preset('door',85,147),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:'#e6e6e2',explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
 
 // Project files are untrusted input. Limits prevent accidentally allocating giant meshes or SVGs.
 export function validateProject(p) {

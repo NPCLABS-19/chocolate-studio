@@ -4,7 +4,7 @@ A private local chocolate relief and packaging editor for Aditya Sangal / 19 stu
 
 ## Current product
 
-The default bar is 60 × 120 × 7.5 mm (3:6); a 3:7 proportion shortcut and editable dimensions are available. Mirrored freehand, line and primitive tools, SVG import, selection, translation, scale, rotation and stroke controls produce editable patterns. Width/height fields apply to dimension-based shapes rather than freehand strokes and lines. Relief height and bevel drive actual bevelled vector geometry; chocolate and inverse mould previews use the same pattern.
+The default rectangular bar uses MFS No. 749 dimensions: 85 × 147 × 10.3 mm (width × height × depth). A shape toggle switches to a 1:1 square at 85 × 85 × 10.3 mm; dimensions remain editable. Existing autosaves at the former 60 × 120 / 140 × 7.5 mm presets upgrade once, fitting their patterns proportionally; custom sizes and imported projects are retained. Mirrored freehand, line and primitive tools, SVG import, selection, translation, scale, rotation and stroke controls produce editable patterns. Width/height fields apply to dimension-based shapes rather than freehand strokes and lines. Relief height and bevel drive actual bevelled vector geometry; chocolate and inverse mould previews use the same pattern.
 
 Chocolate, foil, inner sleeve and outer carton are separate assembly layers. Fitted wrappers cover the complete bar and can be shown/hidden, added/removed and reordered. Materials, light, background, cast shadow and exploded assembly are adjustable. PNG/JPG/WebP artwork is uploaded locally and positioned, scaled and rotated on wrapper fronts. Wrapper sides/back remain solid colour.
 
