@@ -5,8 +5,8 @@ export const clamp = (x,a,b) => Math.min(b,Math.max(a,Number(x)));
 const n = x => Math.round(x*1000)/1000;
 
 export const BAR_FORMATS = Object.freeze({
-  mfs749:Object.freeze({width:85,height:147,thickness:10.3}),
-  square:Object.freeze({width:85,height:85,thickness:10.3})
+  mfs749:Object.freeze({width:85,height:147,thickness:4.3}),
+  square:Object.freeze({width:85,height:85,thickness:3.2})
 });
 
 export function applyBarFormat(project,format) {
@@ -16,14 +16,15 @@ export function applyBarFormat(project,format) {
   // The two formats share a width. Inverse height scaling makes repeated toggles reversible.
   const scale=currentFormat?next.height/h:Math.min(next.width/w,next.height/h);
   for(const o of project.objects){o.x=next.width/2+(o.x-w/2)*scale;o.y=next.height/2+(o.y-h/2)*scale;o.scale*=scale;}
-  Object.assign(project.bar,next);project.barFormatVersion=1;return project;
+  Object.assign(project.bar,next);project.barFormatVersion=2;return project;
 }
 
 // Upgrade only the old built-in dimensions; custom and imported sizes stay editable.
 export function migrateBarFormat(project) {
-  if(project.barFormatVersion===1)return false;
-  project.barFormatVersion=1;
+  if(project.barFormatVersion===2)return false;
+  project.barFormatVersion=2;
   if(project.bar.width===60&&[120,140].includes(project.bar.height)&&project.bar.thickness===7.5){applyBarFormat(project,'mfs749');return true;}
+  if(project.bar.thickness===10.3){const next=Object.values(BAR_FORMATS).find(size=>size.width===project.bar.width&&size.height===project.bar.height);if(next){project.bar.thickness=next.thickness;return true;}}
   return false;
 }
 
@@ -88,7 +89,7 @@ export function preset(name='door',w=49.8,h=99,variant=0) {
   }
   return a;
 }
-export function initialProject(){return {format:'19-chocolate-studio',version:1,barFormatVersion:1,name:'Omani doorway',bar:{...BAR_FORMATS.mfs749,relief:0.65,bevel:0.35},objects:preset('door',85,147),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:'#e6e6e2',explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
+export function initialProject(){return {format:'19-chocolate-studio',version:1,barFormatVersion:2,name:'Omani doorway',bar:{...BAR_FORMATS.mfs749,relief:0.65,bevel:0.35},objects:preset('door',85,147),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:'#e6e6e2',explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
 
 // Project files are untrusted input. Limits prevent accidentally allocating giant meshes or SVGs.
 export function validateProject(p) {
