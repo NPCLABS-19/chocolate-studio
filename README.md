@@ -32,3 +32,5 @@ Optional contour-extraction tooling: `pip install -r research/requirements.txt`,
 Original moodboard and earlier chocolate concept PDFs are available in the library’s Reference tab (`library.html#reference`), with open and download links.
 
 Starting patterns now presents all eight source-derived key variations directly in the editor, led by Scroll panel (T01). Each tile loads broad relief onto the current bar while preserving packaging layers and dimensions, with Undo support. Next key variation cycles these eight designs. The original Doorway, Botanical, Sun and Blank options remain under Basic shapes. Fresh sessions begin with Scroll panel; saved work is preserved.
+
+Direct canvas transforms: click a pattern to reveal its selection box. Drag inside the box to move, drag any square handle to resize proportionally from the opposite corner/edge, or drag the round handle to rotate (Shift snaps to 15°). Controls work on mirrored copies, SVG imports, primitives and freehand strokes. Each gesture is one undo step and updates the 3D relief.
