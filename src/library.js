@@ -1,4 +1,4 @@
-import {object,initialProject,svgDocument} from './pattern.js';
+import {object,initialProject,RELIEF_DEFAULTS,svgDocument} from './pattern.js';
 
 // Drawn in millimetres on one 60 × 90 face. Source geometry is interpreted by hand,
 // not thresholded from photographs; wire bundles, mesh and tiny ornaments are omitted.
@@ -21,7 +21,7 @@ export const library=[
 
 export function libraryProject(id,study=false){
   const entry=library.find(e=>e.id===id);if(!entry)throw Error('Unknown library frame.');
-  const p=initialProject();p.name=`${entry.id} ${entry.name}`;p.bar={width:60,height:90,thickness:5,relief:.65,bevel:.35};p.scene.light=1;p.layers[0].color='#45271b';
+  const p=initialProject();p.name=`${entry.id} ${entry.name}`;p.bar={width:60,height:90,thickness:5,...RELIEF_DEFAULTS};p.scene.light=1;p.layers[0].color='#45271b';
   p.objects=entry.parts.map(part=>object('svg',30,45,{name:part.name,w:60,h:90,viewBox:'0 0 60 90',mirrorX:part.mirrorX,mirrorY:part.mirrorY,svg:`<g fill="${part.filled?'currentColor':'none'}" stroke="${part.filled?'none':'currentColor'}" stroke-width="${study?.65:part.width}" stroke-linecap="round" stroke-linejoin="round">${part.markup?part.d:`<path d="${part.d}"/>`}</g>`}));
   p.libraryId=id;return p;
 }

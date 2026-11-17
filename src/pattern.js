@@ -4,6 +4,8 @@ export const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 export const clamp = (x,a,b) => Math.min(b,Math.max(a,Number(x)));
 const n = x => Math.round(x*1000)/1000;
 
+export const RELIEF_DEFAULTS = Object.freeze({relief:0.55,bevel:0.25});
+
 export const CHOCOLATE_APPEARANCE = Object.freeze({background:'#ff0000',color:'#3b1d12',roughness:0.32});
 
 export function migrateAppearance(project) {
@@ -102,7 +104,7 @@ export function preset(name='door',w=49.8,h=99,variant=0) {
   }
   return a;
 }
-export function initialProject(){return {format:'19-chocolate-studio',version:1,barFormatVersion:3,appearanceVersion:2,name:'Omani doorway',bar:{...BAR_FORMATS.mfs749,relief:0.65,bevel:0.35},objects:preset('door',85,147),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:CHOCOLATE_APPEARANCE.background,explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
+export function initialProject(){return {format:'19-chocolate-studio',version:1,barFormatVersion:3,appearanceVersion:2,name:'Omani doorway',bar:{...BAR_FORMATS.mfs749,...RELIEF_DEFAULTS},objects:preset('door',85,147),layers:['chocolate','foil','sleeve','carton'].map((t,i)=>({...newLayer(t),visible:i===0})),scene:{background:CHOCOLATE_APPEARANCE.background,explode:0,light:1.2,shadow:true},symmetry:{x:true,y:false}};}
 
 // Project files are untrusted input. Limits prevent accidentally allocating giant meshes or SVGs.
 export function validateProject(p) {

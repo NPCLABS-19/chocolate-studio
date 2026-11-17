@@ -15,6 +15,7 @@ test('every shortlisted SVG is placed within the correct physical face with no m
     const original=readFileSync(new URL('../public/shortlist/originals/'+entry.source,import.meta.url));
     assert.equal(createHash('sha256').update(original).digest('hex'),entry.sourceHash);
     const project=validateProject(shortlistProject(entry));
+    assert.equal(project.bar.relief,.55);assert.equal(project.bar.bevel,.25);
     const square=entry.format==='square';
     assert.deepEqual([project.bar.width,project.bar.height,project.bar.thickness],[85,square?85:147,square?3.2:6]);
     const form=project.objects[0];

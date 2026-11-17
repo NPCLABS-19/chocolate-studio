@@ -1,4 +1,4 @@
-import {BAR_FORMATS, CHOCOLATE_APPEARANCE, initialProject, newLayer, object} from './pattern.js';
+import {BAR_FORMATS, CHOCOLATE_APPEARANCE, RELIEF_DEFAULTS, initialProject, newLayer, object} from './pattern.js';
 
 export function shortlistProject(entry) {
   const project = initialProject();
@@ -11,7 +11,7 @@ export function applyShortlistPreset(project, entry) {
   if (!dimensions || !entry.path) throw Error('This mould preset is unavailable.');
   const {width, height} = dimensions;
   project.name = `${entry.number} · ${entry.name}`;
-  project.bar = {...dimensions, relief: 0.55, bevel: 0.1};
+  project.bar = {...dimensions, ...RELIEF_DEFAULTS};
   project.barFormatVersion = 3;
   project.appearanceVersion = 2;
   project.shortlistId = entry.id;
