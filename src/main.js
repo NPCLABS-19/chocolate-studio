@@ -1,21 +1,39 @@
 import './style.css';
 import {MockupRenderer} from './renderer.js';
-import {initialProject,validateProject,svgDocument,objectMarkup,object,preset,newLayer,clone,esc,clamp,uid,BAR_FORMATS,applyBarFormat,migrateBarFormat} from './pattern.js';
+import {initialProject,validateProject,svgDocument,objectMarkup,object,preset,newLayer,clone,esc,clamp,uid,BAR_FORMATS,applyBarFormat,migrateBarFormat,migrateAppearance} from './pattern.js';
 import {libraryProject} from './library.js';
 import {traceProject} from './traces.js';
+import {shortlistProject,applyShortlistPreset,shortlistURL} from './shortlist.js';
 import {HANDLE_DIRECTIONS,objectBounds,objectCopies,resizeObject,rotateObject} from './transform.js';
 
 const paths={select:'M4 3l13 9-6 1-3 6z',pen:'M4 16l-1 5 5-1L20 8l-4-4z M14 6l4 4',line:'M4 20L20 4',leaf:'M5 20C-1 9 8 1 21 3c0 13-7 20-16 17z M5 20L16 8',ellipse:'M21 12a9 9 0 1 1-18 0 9 9 0 1 1 18 0',diamond:'M12 2l10 10-10 10L2 12z',rect:'M4 4h16v16H4z',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z M15 12a3 3 0 1 1-6 0 3 3 0 1 1 6 0',hide:'M3 3l18 18 M2 12s4-7 10-7c6 0 10 7 10 7s-4 7-10 7S2 12 2 12',trash:'M4 6h16 M9 6V3h6v3 M6 6l1 15h10l1-15 M10 10v7 M14 10v7',plus:'M12 4v16 M4 12h16',undo:'M4 9h10a6 6 0 0 1 0 12 M4 9l5-5 M4 9l5 5',redo:'M20 9H10a6 6 0 0 0 0 12 M20 9l-5-5 M20 9l-5 5',upload:'M12 16V3 M7 8l5-5 5 5 M4 16v5h16v-5',download:'M12 3v13 M7 11l5 5 5-5 M4 17v4h16v-4',copy:'M8 8h13v13H8z M16 8V3H3v13h5',up:'M5 15l7-7 7 7',down:'M5 9l7 7 7-7',arrow:'M4 12h16 M14 6l6 6-6 6',reset:'M4 10a8 8 0 1 1 2 9 M4 3v7h7',foil:'M4 3h16v18H4z M4 7l5 3 5-5 6 4 M4 16l5-3 6 5 5-4',sleeve:'M4 8h16v13H4z M4 8l3-5h10l3 5',carton:'M4 5l8-3 8 3v15l-8 3-8-3z M4 5l8 3 8-3 M12 8v15',chocolate:'M5 2h14v20H5z M8 6h8 M8 18h8',close:'M5 5l14 14 M19 5L5 19'};
 const icon=(name,size=18)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.rect}"/></svg>`;
 const $=s=>document.querySelector(s);const KEY='19-chocolate-studio-v1';let project=initialProject();let notice='',restoredProject=false;
-let traceEntries=[];try{traceEntries=await fetch('./library/traces/manifest.json').then(r=>{if(!r.ok)throw Error();return r.json();});}catch{notice='Key variations could not load. Reload to try again.';}
+const manifests=await Promise.allSettled(['./library/traces/manifest.json','./shortlist/manifest.json'].map(async url=>{
+  const response=await fetch(url);
+  if(!response.ok)throw Error('Preset collection unavailable.');
+  return response.json();
+}));
+let traceEntries=manifests[0].status==='fulfilled'?manifests[0].value:[];
+const shortlistEntries=manifests[1].status==='fulfilled'?manifests[1].value:[];
+if(!shortlistEntries.length)notice='Mould designs could not load. Reload to try again.';
+let shortlistFilter='all';
+const requestedMould=new URLSearchParams(location.search).get('mould');
 try{const saved=localStorage.getItem(KEY);if(saved){project=validateProject(JSON.parse(saved));restoredProject=true;}}catch{notice='Saved session could not be restored. A fresh project is ready.';}
 const requestedFrame=new URLSearchParams(location.search).get('frame');
 if(requestedFrame){try{const saved=localStorage.getItem(KEY+'-'+requestedFrame);project=saved?validateProject(JSON.parse(saved)):libraryProject(requestedFrame);}catch{notice='Unknown frame. The saved project is ready.';}}
 const requestedTrace=new URLSearchParams(location.search).get('trace');
 if(requestedTrace){try{const entry=traceEntries.find(e=>e.id===requestedTrace);if(!entry)throw Error();const raw=new URLSearchParams(location.search).get('raw')==='1',saved=raw?null:localStorage.getItem(KEY+'-'+requestedTrace);project=saved?validateProject(JSON.parse(saved)):applyBarFormat(traceProject(entry,raw),'mfs749');}catch{notice='This source trace could not be loaded.';}}
-if(!restoredProject&&!requestedFrame&&!requestedTrace&&traceEntries.length)project=applyBarFormat(traceProject(traceEntries[0]),'mfs749');
+if(requestedMould){
+  const entry=shortlistEntries.find(entry=>entry.id===requestedMould);
+  if(entry)project=shortlistProject(entry);
+  else notice='That mould design is unavailable. Choose a design below.';
+}else if(!restoredProject&&!requestedFrame&&!requestedTrace){
+  if(shortlistEntries.length)project=shortlistProject(shortlistEntries.find(entry=>entry.id==='asset-26')||shortlistEntries[0]);
+  else if(traceEntries.length)project=applyBarFormat(traceProject(traceEntries[0]),'mfs749');
+}
 if(migrateBarFormat(project))notice=`Bar updated · ${project.bar.width} × ${project.bar.height} × ${project.bar.thickness} mm.`;
+migrateAppearance(project);
 let tool='select',stroke=2.4,filled=true,selectedObject=null,selectedLayer=project.layers[0]?.id,workspace='relief',guides=true,view=new URLSearchParams(location.search).get('view')==='mould'?'mould':'chocolate';let history=[],future=[],timer,saveTimer,currentDraw=null,drag=null,previewRevision=0;
 
 document.querySelector('#app').innerHTML=`
@@ -24,17 +42,49 @@ document.querySelector('#app').innerHTML=`
  <main class="workspace"><nav class="workspace-bar"><div class="segmented"><button class="active" data-workspace="relief">Relief editor</button><button data-workspace="packaging">Packaging</button></div><div class="history-tools"><button class="icon-button" data-action="undo" title="Undo (⌘Z)" aria-label="Undo">${icon('undo')}</button><button class="icon-button" data-action="redo" title="Redo (⌘⇧Z)" aria-label="Redo">${icon('redo')}</button><button class="icon-button" data-action="clear" title="Clear pattern" aria-label="Clear pattern">${icon('trash')}</button></div></nav><div class="canvases"><section class="drawing-pane"><div class="pane-caption"><span>Pattern</span><label class="check compact"><input id="guides" type="checkbox" checked>Guides</label></div><div id="drawing-host"><svg id="drawing" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pattern drawing canvas" tabindex="0"><defs><clipPath id="editor-clip"><rect id="clip-rect"/></clipPath></defs><rect id="bar-face" fill="#fbfbf8" stroke="#c4c7bc" stroke-width=".14"/><g id="pattern-shapes" clip-path="url(#editor-clip)"></g><g id="drawing-guides" pointer-events="none"></g><g id="transform-controls" aria-hidden="true"></g></svg></div><div class="pane-footer"><span id="drawing-size"></span><span id="shape-count"></span></div></section><section class="preview-pane"><div class="pane-caption"><div class="segmented small"><button data-view="chocolate" class="active">Chocolate</button><button data-view="mould">Mould</button></div><button class="icon-button" data-action="front" aria-label="Front view" title="Front view">${icon('rect',15)}</button></div><div id="preview"><div class="loading">Preparing model…</div></div><div class="preview-controls"><button data-action="camera">${icon('reset',14)} Reset view</button><span>Drag to orbit · Scroll to zoom</span></div></section></div><div class="scene-bar"><label>Background <input type="color" id="scene-bg" value="${project.scene.background}" aria-label="Scene background"></label><label>Light <input id="light" type="range" min="0.5" max="2" step="0.05" value="${project.scene.light}" aria-label="Studio light intensity"></label><label class="explode-field">Separate layers <input id="explode" type="range" min="0" max="1" step="0.01" value="${project.scene.explode}" aria-label="Separate packaging layers"></label><label class="check"><input id="shadow" type="checkbox" ${project.scene.shadow?'checked':''}>Shadow</label></div></main>
  <aside class="inspector-panel"><div class="panel-title"><h2>Layers</h2><span id="visible-count"></span></div><div id="layer-list"></div><div class="add-layer"><select id="new-layer-type" aria-label="New layer type"><option value="sleeve">Inner sleeve</option><option value="foil">Foil</option><option value="carton">Outer packaging</option><option value="chocolate">Chocolate</option></select><button class="icon-button" data-action="add-layer" aria-label="Add layer">${icon('plus')}</button></div><div class="assembly-actions"><button data-action="bare">Bare bar</button><button data-action="wrapped">Wrapped</button></div><section id="layer-inspector"></section><details class="pattern-layers" open><summary>Pattern objects <span id="object-count"></span></summary><div id="object-list"></div></details><section class="help"><h2>At your fingertips</h2><p>Select a pattern and drag inside its box to move it. Drag a square handle to resize; the round handle rotates. Reveal a packaging layer to wrap the bar.</p><a href="./guide.html" target="_blank" rel="noopener">Guide & shortcuts ${icon('arrow',13)}</a></section></aside></div><footer class="statusbar"><span id="status" role="status" aria-live="polite">${notice||'Ready'}</span><span id="surface-status">Continuous relief · No portion grid</span><span>19 / Chocolate studio</span></footer><input type="file" id="svg-file" accept=".svg,image/svg+xml" hidden><input type="file" id="art-file" accept="image/png,image/jpeg,image/webp" hidden><input type="file" id="project-file" accept=".json,application/json" hidden>`;
 
+const shortlistSection=document.createElement('section');
+shortlistSection.className='shortlist-section';
+shortlistSection.innerHTML=`<div class="panel-title"><h2>Mould designs</h2><span>${shortlistEntries.length}</span></div><div class="shortlist-filters" role="group" aria-label="Filter mould designs"><button data-shortlist-filter="all">All</button><button data-shortlist-filter="mfs749">Rectangle</button><button data-shortlist-filter="square">Square</button></div><button class="full subtle shortlist-share" data-action="share-preset">Copy design link ${icon('copy',14)}</button><input id="design-link" aria-label="Design preview link" readonly hidden><div id="shortlist-presets" class="shortlist-grid"></div>`;
+$('.tools-panel').prepend(shortlistSection);
+
+function renderShortlist(){
+  const entries=shortlistEntries.filter(entry=>shortlistFilter==='all'||entry.format===shortlistFilter);
+  const ordered=[...entries].sort((a,b)=>Number(b.id==='asset-26')-Number(a.id==='asset-26'));
+  $('#shortlist-presets').innerHTML=ordered.map(entry=>{
+    const active=project.shortlistId===entry.id&&project.bar.width===entry.width&&project.bar.height===entry.height;
+    return `<button data-shortlist="${entry.id}" class="${active?'active':''}" aria-pressed="${active}" aria-label="Preview ${entry.number} ${esc(entry.name)}"><img src="./shortlist/${entry.thumbnail}" alt="" width="85" height="85"><span>${entry.number} · ${esc(entry.name)}</span><small>${entry.width} × ${entry.height} mm</small></button>`;
+  }).join('');
+  document.querySelectorAll('[data-shortlist-filter]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.shortlistFilter===shortlistFilter)));
+  $('[data-action="share-preset"]').disabled=!shortlistEntries.some(entry=>entry.id===project.shortlistId);
+}
+function loadShortlist(id){
+  const entry=shortlistEntries.find(entry=>entry.id===id);
+  if(!entry)return;
+  checkpoint();
+  applyShortlistPreset(project,entry);
+  selectedObject=null;
+  selectedLayer=project.layers.find(layer=>layer.type==='chocolate')?.id;
+  tool='select';workspace='relief';view='chocolate';
+  $('.workspace').dataset.mode=workspace;
+  document.querySelectorAll('[data-workspace]').forEach(button=>button.classList.toggle('active',button.dataset.workspace===workspace));
+  document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===view));
+  if(renderer){renderer.mode=view;renderer.host.dataset.ready='false';}
+  $('#design-link').hidden=true;
+  syncUI();changed(false);renderer?.resetCamera();
+  status(`${entry.number} · ${entry.name} · ${entry.width} × ${entry.height} × ${project.bar.thickness} mm.`);
+}
+
 function status(msg){$('#status').textContent=msg;}
 function checkpoint(){history.push(clone(project));if(history.length>45)history.shift();future=[];updateHistory();}
 function updateHistory(){$('[data-action="undo"]').disabled=!history.length;$('[data-action="redo"]').disabled=!future.length;}
-function persist(){clearTimeout(saveTimer);$('#save-state').textContent='Saving…';saveTimer=setTimeout(()=>{try{localStorage.setItem(requestedTrace?KEY+'-'+requestedTrace:requestedFrame?KEY+'-'+requestedFrame:KEY,JSON.stringify(project));$('#save-state').textContent='Saved on this device';}catch{$('#save-state').textContent='Save project to keep changes';status('Browser storage is full. Use Save project to keep your artwork.');}},400);}
+function persist(){clearTimeout(saveTimer);$('#save-state').textContent='Saving…';saveTimer=setTimeout(()=>{try{localStorage.setItem(project.shortlistId?KEY:requestedTrace?KEY+'-'+requestedTrace:requestedFrame?KEY+'-'+requestedFrame:KEY,JSON.stringify(project));$('#save-state').textContent='Saved on this device';}catch{$('#save-state').textContent='Save project to keep changes';status('Browser storage is full. Use Save project to keep your artwork.');}},400);}
 let renderer;
 try{renderer=new MockupRenderer($('#preview'),status);renderer.mode=view;}catch{ $('#preview').innerHTML='<div class="render-error">3D needs WebGL. Enable graphics acceleration in your browser, then reload. The pattern editor and project exports still work.</div>';status('3D is unavailable in this browser.');}
 function scheduleModel(){clearTimeout(timer);const r=++previewRevision;timer=setTimeout(async()=>{if(renderer){await renderer.update(clone(project));if(r===previewRevision)$('#surface-status').textContent=view==='mould'?'Inverse cavity preview · Custom tooling':'Continuous relief · No portion grid';}},100);}
 function changed(repaint=true){renderBarFormats();if(repaint){renderDrawing();renderObjectList();}scheduleModel();persist();}
 function renderTools(){const names={select:'Select',freehand:'Draw',line:'Line',leaf:'Leaf',ellipse:'Ellipse',diamond:'Diamond',rect:'Rectangle',erase:'Erase'};$('#tools').innerHTML=Object.entries(names).map(([id,label])=>`<button class="tool ${tool===id?'active':''}" data-tool="${id}" title="${label}">${icon(id==='freehand'?'pen':id==='erase'?'trash':id)}<span>${label}</span></button>`).join('');$('#drawing').dataset.tool=tool;renderSelection();}
-function renderPresets(){$('#key-presets').innerHTML=traceEntries.map(entry=>`<button data-key-preset="${entry.id}" class="${project.traceId===entry.id?'active':''}" aria-label="Load ${esc(entry.name)}" aria-pressed="${project.traceId===entry.id}"><img src="./library/traces/${entry.id}-relief.svg" alt="" width="56" height="112"><span>${esc(entry.name.replace(' drawing','').replace('Catalogue ',''))}</span></button>`).join('');$('#presets').innerHTML=['door','botanical','sun','blank'].map(name=>{const p={...initialProject(),objects:preset(name)};return `<button data-preset="${name}" title="Load ${name} pattern"><span>${svgDocument(p).replace('width="49.8mm" height="99mm"','width="38" height="74"')}</span>${name==='door'?'Doorway':name[0].toUpperCase()+name.slice(1)}</button>`;}).join('');}
-function loadKeyVariation(id){const entry=traceEntries.find(e=>e.id===id);if(!entry)return;checkpoint();const starter=traceProject(entry),factor=Math.min(project.bar.width/60,project.bar.height/120);project.objects=starter.objects.map(o=>({...o,x:project.bar.width/2+(o.x-30)*factor,y:project.bar.height/2+(o.y-60)*factor,scale:o.scale*factor}));project.name=starter.name;project.traceId=id;project.sourceId=entry.source;project.sourceMode=starter.sourceMode;project.bar.relief=starter.bar.relief;project.bar.bevel=starter.bar.bevel;selectedObject=null;syncUI();changed();status(`${entry.name} loaded. Undo restores your previous pattern.`);}
+function renderPresets(){renderShortlist();$('#key-presets').innerHTML=traceEntries.map(entry=>`<button data-key-preset="${entry.id}" class="${project.traceId===entry.id?'active':''}" aria-label="Load ${esc(entry.name)}" aria-pressed="${project.traceId===entry.id}"><img src="./library/traces/${entry.id}-relief.svg" alt="" width="56" height="112"><span>${esc(entry.name.replace(' drawing','').replace('Catalogue ',''))}</span></button>`).join('');$('#presets').innerHTML=['door','botanical','sun','blank'].map(name=>{const p={...initialProject(),objects:preset(name)};return `<button data-preset="${name}" title="Load ${name} pattern"><span>${svgDocument(p).replace('width="49.8mm" height="99mm"','width="38" height="74"')}</span>${name==='door'?'Doorway':name[0].toUpperCase()+name.slice(1)}</button>`;}).join('');}
+function loadKeyVariation(id){const entry=traceEntries.find(e=>e.id===id);if(!entry)return;checkpoint();const starter=traceProject(entry),factor=Math.min(project.bar.width/60,project.bar.height/120);project.objects=starter.objects.map(o=>({...o,x:project.bar.width/2+(o.x-30)*factor,y:project.bar.height/2+(o.y-60)*factor,scale:o.scale*factor}));project.name=starter.name;delete project.shortlistId;project.traceId=id;project.sourceId=entry.source;project.sourceMode=starter.sourceMode;project.bar.relief=starter.bar.relief;project.bar.bevel=starter.bar.bevel;selectedObject=null;syncUI();changed();status(`${entry.name} loaded. Undo restores your previous pattern.`);}
 function renderDrawing(){const {width:w,height:h}=project.bar,svg=$('#drawing');svg.setAttribute('viewBox',`-4 -4 ${w+8} ${h+8}`);svg.style.aspectRatio=`${w+8}/${h+8}`;for(const sel of ['#bar-face','#clip-rect']){const el=$(sel);el.setAttribute('width',w);el.setAttribute('height',h);el.setAttribute('rx',1);}
   $('#pattern-shapes').innerHTML=project.objects.map(o=>objectMarkup(o,w,h,true,selectedObject)).join('');$('#drawing-guides').innerHTML=guides?`<path d="M ${w/2} -3 v ${h+6} M -3 ${h/2} h ${w+6}" fill="none" stroke="#9ea88c" stroke-width=".12" stroke-dasharray=".6 .7"/><path d="M 0 -2 h ${w} M -2 0 v ${h}" stroke="#9fa497" stroke-width=".14"/><path d="M 0 -3 v 2 M ${w} -3 v 2 M -3 0 h 2 M -3 ${h} h 2" stroke="#9fa497" stroke-width=".14"/>`:'';
   $('#drawing-size').textContent=`${w} × ${h} mm`;$('#shape-count').textContent=`${project.objects.filter(o=>o.visible).length} forms`;$('#object-count').textContent=project.objects.length;renderSelection();}
@@ -62,10 +112,12 @@ const filename=()=>project.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace
 
 document.addEventListener('click',async e=>{
   const el=e.target.closest('button,a,summary');if(!el)return;
+  if(el.dataset.shortlist){loadShortlist(el.dataset.shortlist);return;}
+  if(el.dataset.shortlistFilter){shortlistFilter=el.dataset.shortlistFilter;renderShortlist();return;}
   if(el.dataset.tool){tool=el.dataset.tool;renderTools();return;}
   if(el.dataset.barFormat){if(el.getAttribute('aria-pressed')==='true')return;checkpoint();applyBarFormat(project,el.dataset.barFormat);selectedObject=null;syncUI();changed(false);renderer?.resetCamera();status(`${el.dataset.barFormat==='mfs749'?'No. 749 footprint':'Square bar'} · ${project.bar.width} × ${project.bar.height} × ${project.bar.thickness} mm.`);return;}
   if(el.dataset.keyPreset){loadKeyVariation(el.dataset.keyPreset);return;}
-  if(el.dataset.preset){checkpoint();delete project.traceId;delete project.sourceId;delete project.sourceMode;project.objects=preset(el.dataset.preset,project.bar.width,project.bar.height);selectedObject=null;syncUI();changed();status('Starting pattern loaded. Undo restores your previous work.');return;}
+  if(el.dataset.preset){checkpoint();delete project.shortlistId;delete project.traceId;delete project.sourceId;delete project.sourceMode;project.objects=preset(el.dataset.preset,project.bar.width,project.bar.height);selectedObject=null;syncUI();changed();status('Starting pattern loaded. Undo restores your previous work.');return;}
   if(el.dataset.selectObject){tool='select';renderTools();selectObject(el.dataset.selectObject);return;}
   if(el.dataset.objectVisible){checkpoint();const o=project.objects.find(o=>o.id===el.dataset.objectVisible);o.visible=!o.visible;changed();return;}
   if(el.dataset.selectLayer){selectedLayer=el.dataset.selectLayer;renderLayerList();renderLayerInspector();return;}
@@ -75,6 +127,11 @@ document.addEventListener('click',async e=>{
   const action=el.dataset.action;if(!action)return;e.preventDefault();
   try{
     if(action==='home')return;
+    if(action==='share-preset'){
+      const url=shortlistURL(location.href,project.shortlistId);
+      try{await navigator.clipboard.writeText(url);status('Design preview link copied.');}
+      catch{const field=$('#design-link');field.value=url;field.hidden=false;field.focus();field.select();status('Copy the selected design preview link.');}
+    }
 
     if(action==='undo'&&history.length){future.push(clone(project));project=history.pop();if(!project.objects.some(o=>o.id===selectedObject))selectedObject=null;selectedLayer=project.layers[0]?.id;syncUI();changed(false);status('Undone.');}
     if(action==='redo'&&future.length){history.push(clone(project));project=future.pop();if(!project.objects.some(o=>o.id===selectedObject))selectedObject=null;selectedLayer=project.layers[0]?.id;syncUI();changed(false);status('Redone.');}

@@ -9,11 +9,29 @@ function roundRect(w,h,r=1) {
 }
 function slab(w,h,t,mat){const bevel=Math.min(.65,t*.22);const geo=new THREE.ExtrudeGeometry(roundRect(w-bevel*2,h-bevel*2,1.25),{depth:t-bevel*2,bevelEnabled:true,bevelSize:bevel,bevelThickness:bevel,bevelSegments:5,steps:1,curveSegments:20});geo.translate(0,0,-t/2+bevel);const m=new THREE.Mesh(geo,mat);m.castShadow=true;m.receiveShadow=true;return m;}
 
+function chocolateGrain(){
+  const size=128,data=new Uint8Array(size*size);
+  let seed=7019;
+  for(let i=0;i<data.length;i++){
+    seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+    data[i]=106+(seed%44);
+  }
+  const texture=new THREE.DataTexture(data,size,size,THREE.RedFormat);
+  texture.wrapS=texture.wrapT=THREE.RepeatWrapping;
+  texture.repeat.set(1.8,1.8);
+  texture.generateMipmaps=true;
+  texture.minFilter=THREE.LinearMipmapLinearFilter;
+  texture.magFilter=THREE.LinearFilter;
+  texture.needsUpdate=true;
+  return texture;
+}
+
 export class MockupRenderer {
   constructor(host,onError){
     this.host=host;this.onError=onError;this.revision=0;this.assets=new Map();this.mode='chocolate';this.disposed=false;
-    this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.25;host.append(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label','Interactive 3D chocolate and packaging preview. Drag to orbit; scroll to zoom.');
-    this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#e6e6e2');
+    this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,preserveDrawingBuffer:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;host.append(this.renderer.domElement);this.renderer.domElement.setAttribute('aria-label','Interactive 3D chocolate and packaging preview. Drag to orbit; scroll to zoom.');
+    this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#ff0000');
+    this.chocolateGrain=chocolateGrain();
     this.camera=new THREE.PerspectiveCamera(32,1,.1,2000);this.camera.position.set(82,72,220);
     this.controls=new OrbitControls(this.camera,this.renderer.domElement);this.controls.enableDamping=true;this.controls.dampingFactor=.12;this.controls.minDistance=50;this.controls.maxDistance=700;this.controls.maxPolarAngle=Math.PI;this.controls.target.set(0,0,0);
     const pmrem=new THREE.PMREMGenerator(this.renderer),room=new RoomEnvironment();this.env=pmrem.fromScene(room,.04);this.scene.environment=this.env.texture;room.dispose();pmrem.dispose();
@@ -61,7 +79,7 @@ export class MockupRenderer {
         const floor=new THREE.Mesh(vector.floor,mat);floor.receiveShadow=true;this.product.add(floor);const recess=new THREE.Mesh(geo,mat);recess.receiveShadow=true;recess.castShadow=true;this.product.add(recess);const bottom=slab(w+16,h+16,1.4,mat);bottom.position.z=-p.bar.relief-1.2;this.product.add(bottom);
       }else{
         const chocolate=p.layers.find(l=>l.type==='chocolate');
-        if(chocolate?.visible){const mat=new THREE.MeshPhysicalMaterial({color:chocolate.color,roughness:chocolate.roughness,metalness:0,clearcoat:.12,clearcoatRoughness:.45});const base=slab(w,h,t,mat);this.product.add(base);const surface=new THREE.Mesh(geo,mat);surface.position.z=t/2-.012;surface.castShadow=true;surface.receiveShadow=true;this.product.add(surface);}else geo.dispose();
+        if(chocolate?.visible){const mat=new THREE.MeshPhysicalMaterial({color:chocolate.color,roughness:chocolate.roughness,metalness:0,ior:1.45,specularIntensity:.55,envMapIntensity:.5,clearcoat:.08,clearcoatRoughness:.28,bumpMap:this.chocolateGrain,bumpScale:.008});const base=slab(w,h,t,mat);this.product.add(base);const surface=new THREE.Mesh(geo,mat);surface.position.z=t/2-.012;surface.castShadow=true;surface.receiveShadow=true;this.product.add(surface);}else geo.dispose();
         p.layers.filter(l=>l.type!=='chocolate').forEach((l,i)=>this.product.add(this.wrapper(l,i,p)));
       }
       if(dimensionsChanged)this.resetCamera();this.host.dataset.ready='true';this.host.querySelector('.loading')?.remove();this.renderer.render(this.scene,this.camera);this.host.dispatchEvent(new Event('modelready'));
